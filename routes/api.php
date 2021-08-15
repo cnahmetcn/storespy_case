@@ -17,18 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', [AuthController::class, 'register']);
-
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/messages', [MessagingController::class, 'store']);
 
+// Private  routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/messages', [MessagingController::class, 'index']);
     Route::get('/messages/{id}', [MessagingController::class, 'show']);
     Route::get('/messages/search/{q}', [MessagingController::class, 'search']);
     Route::put('/messages/{id}', [MessagingController::class, 'update']);
     Route::delete('/messages/{id}', [MessagingController::class, 'destroy']);
-    Route::post('/logout',[AuthController::class,'logout']);
-
- });
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

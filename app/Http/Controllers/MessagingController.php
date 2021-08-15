@@ -28,8 +28,9 @@ class MessagingController extends Controller
         $request->validate([
             'name' => 'required',
             'mail' => 'required|email',
-            'message' => 'required',
+            'message' => 'required'
         ]);
+
         return Messaging::create($request->all());
     }
 
@@ -41,7 +42,7 @@ class MessagingController extends Controller
      */
     public function show($id)
     {
-        return Messaging::find($id)->get();
+        return Messaging::find($id);
     }
 
     /**
@@ -53,9 +54,9 @@ class MessagingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $message = Messaging::find($id);
-        $message->update($request->all());
-        return $message;
+        $Messaging = Messaging::find($id);
+        $Messaging->update($request->all());
+        return $Messaging;
     }
 
     /**
@@ -69,14 +70,14 @@ class MessagingController extends Controller
         return Messaging::destroy($id);
     }
 
-    /**
-     * Remove the specified resource from storage.
+     /**
+     * Search for a name
      *
-     * @param  str  $q
+     * @param  str  $name
      * @return \Illuminate\Http\Response
      */
     public function search($q)
     {
-        return Messaging::where('message','like','%'.$q.'%')->get();
+        return Messaging::where('message', 'like', '%'.$q.'%')->get();
     }
 }
