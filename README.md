@@ -20,5 +20,6 @@
 - Sanctum
 - SQLite
 - REST API
+- Mailtrap.io
 
 

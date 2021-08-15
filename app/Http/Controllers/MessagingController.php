@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Messaging;
 use Illuminate\Http\Request;
+use Mail;
 
 class MessagingController extends Controller
 {
@@ -30,6 +31,18 @@ class MessagingController extends Controller
             'mail' => 'required|email',
             'message' => 'required'
         ]);
+
+        Mail::send([], [], function ($message) use($request) {
+            $message->to('ahmetcan@acn.com', 'Ahmet Can');
+            $message->from($request->mail, $request->name);
+            $message->subject('Case Mesajı');
+            $message->setBody(
+            'Merhaba, ben <strong>'.$request->name.'</strong> <br />
+            Bana bu mail adresinden ulaşabilirsiniz: <strong>'.$request->mail.'</strong> <br />
+            <strong>Mesaj</strong>: ' .$request->message.'<br />
+            <strong>Tarih</strong>: ' .now().'','text/html'
+            );
+        });
 
         return Messaging::create($request->all());
     }
