@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Messaging;
 use Illuminate\Http\Request;
 use Mail;
+use App\Jobs\MessagingJob;
 
 class MessagingController extends Controller
 {
@@ -26,23 +27,32 @@ class MessagingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'mail' => 'required|email',
-            'message' => 'required'
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'mail' => 'required|email',
+        //     'message' => 'required'
+        // ]);
 
-        Mail::send([], [], function ($message) use($request) {
-            $message->to('ahmetcan@acn.com', 'Ahmet Can');
-            $message->from($request->mail, $request->name);
-            $message->subject('Case Mesajı');
-            $message->setBody(
-            'Merhaba, ben <strong>'.$request->name.'</strong> <br />
-            Bana bu mail adresinden ulaşabilirsiniz: <strong>'.$request->mail.'</strong> <br />
-            <strong>Mesaj</strong>: ' .$request->message.'<br />
-            <strong>Tarih</strong>: ' .now().'','text/html'
-            );
-        });
+        $data = [
+            'name' => $request->input('name'),
+            'mail' => $request->input('email'),
+            'message' => $request->input('message')
+        ];
+
+        // Mail::send([], [], function ($message) use($request) {
+        //     $message->to('ahmetcan@acn.com', 'Ahmet Can');
+        //     $message->from($request->mail, $request->name);
+        //     $message->subject('Case Mesajı');
+        //     $message->setBody(
+        //     'Merhaba, ben <strong>'.$request->name.'</strong> <br />
+        //     Bana bu mail adresinden ulaşabilirsiniz: <strong>'.$request->mail.'</strong> <br />
+        //     <strong>Mesaj</strong>: ' .$request->message.'<br />
+        //     <strong>Tarih</strong>: ' .now().'','text/html'
+        //     );
+        // });
+
+        // dispatch(new MessagingJob($data));
+        MessagingJob::dispatch($data);
 
         return Messaging::create($request->all());
     }
