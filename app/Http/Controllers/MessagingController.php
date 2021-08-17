@@ -16,7 +16,7 @@ class MessagingController extends Controller
      */
     public function index()
     {
-        return Messaging::all();
+        return Messaging::paginate(5);
     }
 
     /**
